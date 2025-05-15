@@ -49,9 +49,12 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'slug', 'description', 'price', 'original_price',
             'category', 'category_name', 'sku', 'stock', 'is_new_arrival',
-            'is_bestseller', 'is_featured', 'specifications', 'images',
-            'primary_image', 'created_at'
-        ]
+            'is_bestseller', 'is_featured', 'custom_attributes', 'specifications', # Added custom_attributes
+            'images', 'primary_image', 'created_at'
+        ] # 'category' is the ForeignKey field, it should be writable (expects category ID).
+        read_only_fields = [ # custom_attributes is writable
+            'id', 'slug', 'created_at', 'primary_image', 'category_name', 'specifications', 'images'
+        ] # slug is now auto-generated or read-only
 
     def get_primary_image(self, obj):
         primary_img = obj.images.filter(is_primary=True).first()

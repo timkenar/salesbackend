@@ -14,18 +14,30 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
     lookup_field = 'slug'
 
-class ProductViewSet(viewsets.ReadOnlyModelViewSet):
+class ProductViewSet(viewsets.ModelViewSet): # Changed from ReadOnlyModelViewSet
     queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    # serializer_class is handled by get_serializer_class
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'is_new_arrival', 'is_bestseller', 'is_featured']
     search_fields = ['name', 'description', 'sku']
     ordering_fields = ['price', 'name', 'created_at']
+    # lookup_field defaults to 'pk', which is fine for /products/{id}/ operations
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return ProductDetailSerializer
+        # For list, create, update, partial_update
         return ProductSerializer
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            self.permission_classes = [permissions.IsAdminUser]
+        else: # For list, retrieve, and custom GET actions
+            self.permission_classes = [permissions.AllowAny] # Or IsAuthenticatedOrReadOnly for viewing
+        return super().get_permissions()
 
     @action(detail=False, methods=['get'])
     def featured(self, request):
