@@ -6,7 +6,7 @@ from django.utils.text import slugify
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
+  
     image = models.ImageField(upload_to='categories/', blank=True, null=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='children')
 
@@ -20,7 +20,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
     custom_attributes = models.JSONField(default=dict, blank=True, help_text="Dynamic key-value pairs for product features.")
-    description = models.TextField()
+    description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     original_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
@@ -31,6 +31,13 @@ class Product(models.Model):
     is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # New image fields: main image and up to 4 alternatives
+    image_main = models.ImageField(upload_to='products/images/', blank=True, null=True, help_text="Main product image.")
+    image_alt1 = models.ImageField(upload_to='products/images/', blank=True, null=True, help_text="Alternative product image 1.")
+    image_alt2 = models.ImageField(upload_to='products/images/', blank=True, null=True, help_text="Alternative product image 2.")
+    image_alt3 = models.ImageField(upload_to='products/images/', blank=True, null=True, help_text="Alternative product image 3.")
+    image_alt4 = models.ImageField(upload_to='products/images/', blank=True, null=True, help_text="Alternative product image 4.")
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -45,14 +52,6 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-
-class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='products/')
-    is_primary = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"Image for {self.product.name}"
 
 class ProductSpecification(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='specifications')
