@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-cq0ef6d78+!0c%weedaxn9x(+#zbya#ei^jc!3)^s-9@4&z4_j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://ascentwimabackend.onrender.com']
 
 
 # Application definition
