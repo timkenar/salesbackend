@@ -8,6 +8,8 @@ urlpatterns = [
     path('api/auth/', include('users.urls')),
     path('api/', include('api.urls')),
     path('api/lipa/', include('mpesa.urls')),
+    path("api/chatbot/", include("chatbot.urls")),
+
 ]
 
 if settings.DEBUG:
