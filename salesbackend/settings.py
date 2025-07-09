@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'ascentwimabackend.onrender.com']
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
      'corsheaders.middleware.CorsMiddleware',
      'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
    
     'django.middleware.common.CommonMiddleware',
@@ -163,3 +165,117 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "Ascent Wima Admin",
+
+    # Title on the brand (1st part) (Will default to current_admin_site.site_header if absent or None)
+    "site_header": "Ascent Wima",
+
+    # Logo to use for your site, must be present in static files, used for brand on top left
+    "site_logo": "img/logo.png",
+
+    # Welcome text on the login screen
+    "welcome_sign": "Welcome to the Ascent Wima Admin",
+
+    # Copyright on the footer
+    "copyright": "Ascent Wima Ltd",
+
+    # The model admin to search from the search bar, you can specify multiple models
+    "search_model": ["auth.User", "auth.Group"],
+
+    # Field name on user model that contains name of the user
+    "user_avatar": None,
+
+    ############
+    # Top Menu #
+    ############
+
+    # Links to put along the top menu
+    "topmenu_links": [
+
+        # external url that will be opened in a new window (tabs) of the current browser
+        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+
+        # model admin to link to (Permissions checked against model)
+        {"model": "auth.User"},
+
+        # App with dropdown menu to all its models pages (Permissions checked against models)
+        {"app": "api"},
+
+    ],
+
+    #############
+    # User Menu #
+    #############
+
+    # Additional links to include in the user menu on the top right ("app" url button)
+    # "usermenu_links": [
+    #     {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+
+    #     {"model": "auth.user"}
+
+    # ],
+
+    #############
+    # Side Menu #
+    #############
+
+    # Whether to display the side menu
+    "show_sidebar": True,
+
+    # Whether to aut expand the menu
+    "navigation_expanded": True,
+
+    # Hide these apps when generating side menu e.g.
+    "hide_apps": ["auth"],
+
+    # Hide these models when generating side menu (e.g auth.user)
+    "hide_models": ["auth.group"],
+
+    # List of apps (and/or models) to base side menu (e.g. auth)
+    "order_with_respect_to": ["auth", "api", "users", "mpesa", "chatbot"],
+
+    # Custom icons for sidebar apps/models
+    # https://fontawesome.com/icons?d=gallery&m=free&v=5.0.0,5.0.1,5.0.10,5.0.11,5.0.12,5.0.13,5.0.2,5.0.3,5.0.4,5.0.5,5.0.6,5.0.7,5.0.8,5.0.9,5.1.0,5.1.1,5.2.0,5.3.0,5.3.1,5.4.0,5.4.1,5.5.0,5.6.0,5.6.1,5.6.2,5.6.3,5.7.0,5.7.1,5.7.2,5.8.0,5.9.0
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "api.category": "fas fa-sitemap",
+        "api.product": "fas fa-box",
+        "api.order": "fas fa-shopping-cart",
+        "api.orderitem": "fas fa-clipboard-list",
+        "users.user": "fas fa-user",
+        "mpesa.mpesatransaction": "fas fa-money-bill-wave",
+        "chatbot.faq": "fas fa-question-circle",
+        "chatbot.chatbotquery": "fas fa-comments",
+    },
+
+    # Icons that are used to display the very top right.
+    # This is automatically populated with the default Django icons if not specified.
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+
+    #################
+    # Related Modal #
+    #################
+    # Use modals instead of popups
+    "related_modal_active": False,
+
+    #############
+    # UI Tweaks #
+    #############
+    # Whether to show a footer
+    "show_footer": True,
+    # Whether to show the UI customizer on the sidebar
+    "show_ui_builder": False,
+
+    "changeform_format": "horizontal_tabs",
+    # "changeform_format_overrides": {"auth.user": "vertical_tabs", "auth.group": "vertical_tabs"},
+
+}
