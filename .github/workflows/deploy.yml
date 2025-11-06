@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no deploy@206.72.201.211 << 'EOF'
+          ssh -o StrictHostKeyChecking=no root@206.72.201.211 << 'EOF'
             cd /root/root/salesbackend || exit
             git fetch origin main
             git reset --hard origin/main
