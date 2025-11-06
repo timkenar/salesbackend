@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up SSH
+      - name: Start SSH Agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
@@ -21,13 +21,31 @@ jobs:
       - name: Deploy to VPS
         run: |
           ssh -o StrictHostKeyChecking=no root@206.72.201.211 << 'EOF'
-            cd /root/root/salesbackend || exit
+            echo "🚀 Starting deployment on VPS..."
+
+            # Move to project directory
+            cd /root/root/salesbackend || exit 1
+
+            echo "📦 Pulling latest changes..."
             git fetch origin main
             git reset --hard origin/main
+
+            echo "🐍 Activating virtual environment..."
             source /root/root/env/bin/activate
+
+            echo "📦 Installing dependencies..."
+            pip install --upgrade pip
             pip install -r requirements.txt
+
+            echo "🧱 Applying migrations..."
             python manage.py migrate --noinput
+
+            echo "🎨 Collecting static files..."
             python manage.py collectstatic --noinput
-            sudo systemctl restart salesbackend
-            sudo systemctl restart nginx
+
+            echo "🔄 Restarting services..."
+            systemctl restart salesbackend
+            systemctl restart nginx
+
+            echo "✅ Deployment completed successfully!"
           EOF
