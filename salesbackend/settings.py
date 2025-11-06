@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,8 +30,9 @@ SECRET_KEY = 'django-insecure-cq0ef6d78+!0c%weedaxn9x(+#zbya#ei^jc!3)^s-9@4&z4_j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'ascentwimabackend.onrender.com']
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'ascentwimabackend.onrender.com']
 
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 # Application definition
 
@@ -82,13 +88,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'salesbackend.wsgi.application'
 
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite default port
-    "http://localhost:5174",
-    "https://ascentwima.com",
-    "https://ascentwimabackend.onrender.com"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",  # Vite default port
+#     "http://localhost:5174",
+#     "https://ascentwima.com",
+#     "https://ascentwimabackend.onrender.com"
+# ]
 
 # REST Framework settings
 REST_FRAMEWORK = {
