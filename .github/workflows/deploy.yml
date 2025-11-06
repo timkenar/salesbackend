@@ -1,0 +1,33 @@
+name: 🚀 Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no deploy@206.72.201.211 << 'EOF'
+            cd /root/root/salesbackend || exit
+            git fetch origin main
+            git reset --hard origin/main
+            source /root/root/env/bin/activate
+            pip install -r requirements.txt
+            python manage.py migrate --noinput
+            python manage.py collectstatic --noinput
+            sudo systemctl restart salesbackend
+            sudo systemctl restart nginx
+          EOF
